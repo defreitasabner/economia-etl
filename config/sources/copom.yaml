@@ -1,0 +1,13 @@
+source_name: copom
+
+extract:
+  base_url: "https://www.bcb.gov.br/api/servico/sitebcb/copom"
+  endpoint_atas: atas
+  endpoint_atas_detalhes: atas_detalhes
+  default:
+    qtd_atas: 8
+
+load:
+  bronze:
+    dataset_name: atas
+    partition_by: []
