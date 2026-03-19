@@ -1,6 +1,7 @@
 import argparse
 
 from src.pipelines.bcb.atas import extrair_atas_copom
+from src.pipelines.bcb.comunicados import extrair_comunicados_copom
 
 
 def register_commands(domain_parsers: argparse._SubParsersAction) -> None:
@@ -9,21 +10,39 @@ def register_commands(domain_parsers: argparse._SubParsersAction) -> None:
     Args:
         domain_parsers: Coleção de subcomandos do parser principal.
     """
-    parser_bcb = domain_parsers.add_parser('bcb', help='Pipelines do domínio BCB')
-    dataset_parsers = parser_bcb.add_subparsers(dest='dataset', required=True)
+    parser_bcb = domain_parsers.add_parser('bcb', help = 'Pipelines do domínio BCB')
+    dataset_parsers = parser_bcb.add_subparsers(dest = 'dataset', required = True)
 
-    parser_atas = dataset_parsers.add_parser('atas', help='Pipelines do dataset atas')
-    tier_parsers = parser_atas.add_subparsers(dest='tier', required=True)
+    # Pipelines do dataset atas
+    parser_atas = dataset_parsers.add_parser('atas', help = 'Pipelines do dataset atas')
+    
+    tier_parsers = parser_atas.add_subparsers(dest = 'tier', required = True)
 
-    parser_bronze = tier_parsers.add_parser('bronze', help='Extrai atas do COPOM para a camada bronze')
+    parser_bronze = tier_parsers.add_parser('bronze', help = 'Extrai atas do COPOM para a camada bronze')
     parser_bronze.add_argument(
-        '--qtd-atas',
+        '--quantidade',
         type = int,
         default = None,
         help = 'Quantidade de atas para extração (sobrescreve o valor do config)',
     )
-    parser_bronze.set_defaults(handler=_run_copom_atas_bronze)
+    parser_bronze.set_defaults(handler = _run_copom_atas_bronze)
 
+    # Pipelines do dataset comunicados
+    parser_comunicados = dataset_parsers.add_parser('comunicados', help = 'Pipelines do dataset comunicados')
+
+    tier_parsers_comunicados = parser_comunicados.add_subparsers(dest = 'tier', required = True)
+
+    parser_bronze_comunicados = tier_parsers_comunicados.add_parser('bronze', help = 'Extrai comunicados do COPOM para a camada bronze')
+    parser_bronze_comunicados.add_argument(
+        '--quantidade',
+        type = int,
+        default = None,
+        help = 'Quantidade de comunicados para extração (sobrescreve o valor do config)',
+    )
+    parser_bronze_comunicados.set_defaults(handler = _run_copom_comunicados_bronze)
 
 def _run_copom_atas_bronze(args: argparse.Namespace) -> None:
-    extrair_atas_copom(qtd_atas=args.qtd_atas)
+    extrair_atas_copom(qtd_atas = args.quantidade)
+
+def _run_copom_comunicados_bronze(args: argparse.Namespace) -> None:
+    extrair_comunicados_copom(qtd_comunicados = args.quantidade)

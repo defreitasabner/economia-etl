@@ -1,13 +1,20 @@
 source_name: bcb
 
 extract:
-  base_url: "https://www.bcb.gov.br/api/servico/sitebcb/copom"
-  endpoint_atas: atas
-  endpoint_atas_detalhes: atas_detalhes
-  default:
+  atas:
+    url_atas: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
+    url_atas_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"
     qtd_atas: 8
+  comunicados:
+    url_comunicados: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
+    url_comunicados_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
+    qtd_comunicados: 8
 
 load:
   bronze:
-    dataset_name: atas
-    partition_by: []
+    atas:
+      dataset_name: atas
+      partition_by: []
+    comunicados:
+      dataset_name: comunicados
+      partition_by: []

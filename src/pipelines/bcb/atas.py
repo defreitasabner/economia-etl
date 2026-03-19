@@ -13,21 +13,21 @@ def extrair_atas_copom(qtd_atas: int | None = None) -> None:
     source_config = load_config(general_config['config']['sources']['bcb'])
 
     if qtd_atas:
-        source_config['extract']['default']['qtd_atas'] = qtd_atas
+        source_config['extract']['atas']['qtd_atas'] = qtd_atas
         logger.info(f"Quantidade de atas para extração definida via argumento: {qtd_atas}")
     else:
-        logger.info(f"Quantidade de atas para extração definida via config: {source_config['extract']['default']['qtd_atas']}")
+        logger.info(f"Quantidade de atas para extração definida via config: {source_config['extract']['atas']['qtd_atas']}")
     
     pipeline = Pipeline(
         extractor = AtasCopomExtractor(
-            config = source_config['extract'],
+            config = source_config['extract']['atas'],
         ),
         transformers = [],
         loader = BronzeLoader(
             config = general_config['storage']['bronze'],
             source_name = source_config['source_name'],
-            dataset_name = source_config['load']['bronze']['dataset_name'],
-            partition_by = source_config['load']['bronze'].get('partition_by', [])
+            dataset_name = source_config['load']['bronze']['atas']['dataset_name'],
+            partition_by = source_config['load']['bronze']['atas'].get('partition_by', [])
         )
     )
     pipeline.run()
