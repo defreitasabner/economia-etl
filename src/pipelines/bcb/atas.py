@@ -1,6 +1,6 @@
 import logging
 
-from src.extract.copom_extractor import CopomExtractor
+from src.extract.bcb.atas_copom_extractor import AtasCopomExtractor
 from src.load.bronze_loader import BronzeLoader
 from src.pipelines.pipeline import Pipeline
 from src.utils.config import load_config
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def extrair_atas_copom(qtd_atas: int | None = None) -> None:
     general_config = load_config('general.yaml')
-    source_config = load_config('sources/copom.yaml')
+    source_config = load_config(general_config['config']['sources']['bcb'])
 
     if qtd_atas:
         source_config['extract']['default']['qtd_atas'] = qtd_atas
@@ -19,7 +19,7 @@ def extrair_atas_copom(qtd_atas: int | None = None) -> None:
         logger.info(f"Quantidade de atas para extração definida via config: {source_config['extract']['default']['qtd_atas']}")
     
     pipeline = Pipeline(
-        extractor = CopomExtractor(
+        extractor = AtasCopomExtractor(
             config = source_config['extract'],
         ),
         transformers = [],

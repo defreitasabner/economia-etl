@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import logging
 from datetime import datetime
 
@@ -8,7 +9,7 @@ from src.extract.base_extractor import BaseExtractor
 
 logger = logging.getLogger(__name__)
 
-class CopomExtractor(BaseExtractor):
+class AtasCopomExtractor(BaseExtractor):
     """Extrator de atas do COPOM via API pública do Banco Central."""
  
     def __init__(self, config: dict) -> None:
@@ -31,12 +32,15 @@ class CopomExtractor(BaseExtractor):
                 - Dicionário de metadados da extração, incluindo URL,
                     parâmetros de consulta, quantidade de registros e timestamp.
         """
-        atas, url = self.__extrair_atas(self.qtd_atas)
+        atas, url = self.__extrair_atas(self.url_atas, self.qtd_atas)
         atas_detalhes = []
-        for ata in atas:
-            nro_reuniao = ata['nroReuniao']
-            detalhes = self.__extrair_atas_detalhes(nro_reuniao)
-            atas_detalhes.append(detalhes)
+        with ThreadPoolExecutor(max_workers = min(4, len(atas))) as executor:
+            atas_detalhes = list(
+                executor.map(
+                    lambda ata: self.__extrair_atas_detalhes(self.url_atas_detalhes, ata['nroReuniao']), 
+                    atas
+                )
+            )
         metadata = {
             'url': url,
             'query_params': {
@@ -48,10 +52,11 @@ class CopomExtractor(BaseExtractor):
         logger.info(f"Extraídas {len(atas_detalhes)} atas do COPOM")
         return atas_detalhes, metadata
 
-    def __extrair_atas(self, qtd_atas: int) -> tuple[list[dict], str]:
+    def __extrair_atas(self, url: str, qtd_atas: int) -> tuple[list[dict], str]:
         """Consulta a API para obter a lista de atas mais recentes.
 
         Args:
+            url: URL da API para consulta das atas.
             qtd_atas: Quantidade de atas a serem extraídas.
 
         Returns:
@@ -62,14 +67,15 @@ class CopomExtractor(BaseExtractor):
         query_params = {
             'quantidade': qtd_atas
         }
-        response = requests.get(self.url_atas, params = query_params)
-        logger.debug(f"Requisição GET para {self.url_atas} com params {query_params} retornou status {response.status_code}")
+        response = requests.get(url, params = query_params, timeout = 5)
+        logger.debug(f"Requisição GET para {url} com params {query_params} retornou status {response.status_code}")
         return response.json()['conteudo'], response.url
     
-    def __extrair_atas_detalhes(self, nro_reuniao: int) -> dict:
+    def __extrair_atas_detalhes(self, url: str, nro_reuniao: int) -> dict:
         """Consulta a API para obter os detalhes de uma reunião do COPOM.
 
         Args:
+            url: URL da API para consulta dos detalhes da ata.
             nro_reuniao: Número identificador da reunião.
 
         Returns:
@@ -78,7 +84,7 @@ class CopomExtractor(BaseExtractor):
         query_params = {
             'nro_reuniao': nro_reuniao
         }
-        response = requests.get(self.url_atas_detalhes, params = query_params)
-        logger.debug(f"Requisição GET para {self.url_atas_detalhes} com params {query_params} retornou status {response.status_code}")
+        response = requests.get(url, params = query_params, timeout = 5)
+        logger.debug(f"Requisição GET para {url} com params {query_params} retornou status {response.status_code}")
         return response.json()['conteudo']
     

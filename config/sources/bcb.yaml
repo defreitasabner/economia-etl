@@ -1,4 +1,4 @@
-source_name: copom
+source_name: bcb
 
 extract:
   base_url: "https://www.bcb.gov.br/api/servico/sitebcb/copom"

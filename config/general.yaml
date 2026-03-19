@@ -2,3 +2,7 @@ storage:
   bronze:
     base_path: data/bronze
     format: json
+
+config:
+  sources:
+    bcb: sources/bcb.yaml

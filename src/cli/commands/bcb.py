@@ -1,6 +1,6 @@
 import argparse
 
-from src.pipelines.copom import extrair_atas_copom
+from src.pipelines.bcb.atas import extrair_atas_copom
 
 
 def register_commands(domain_parsers: argparse._SubParsersAction) -> None:
@@ -9,8 +9,8 @@ def register_commands(domain_parsers: argparse._SubParsersAction) -> None:
     Args:
         domain_parsers: Coleção de subcomandos do parser principal.
     """
-    parser_copom = domain_parsers.add_parser('copom', help='Pipelines do domínio COPOM')
-    dataset_parsers = parser_copom.add_subparsers(dest='dataset', required=True)
+    parser_bcb = domain_parsers.add_parser('bcb', help='Pipelines do domínio BCB')
+    dataset_parsers = parser_bcb.add_subparsers(dest='dataset', required=True)
 
     parser_atas = dataset_parsers.add_parser('atas', help='Pipelines do dataset atas')
     tier_parsers = parser_atas.add_subparsers(dest='tier', required=True)
