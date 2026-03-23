@@ -1,5 +1,8 @@
-class BaseLoader:
+from abc import ABC, abstractmethod
+
+class BaseLoader(ABC):
    
+   @abstractmethod
    def load(self, data: list[dict], metadata: dict) -> None:
-        raise NotImplementedError("The load method must be implemented by subclasses.")
+      pass
     

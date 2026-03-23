@@ -1,5 +1,9 @@
-class BaseExtractor:
+from abc import ABC, abstractmethod
+
+class BaseExtractor(ABC):
     
+    @abstractmethod
     def extract(self) -> tuple[list[dict], dict]:
-        raise NotImplementedError("The extract method must be implemented by subclasses.")
-    
+        pass
+
+
