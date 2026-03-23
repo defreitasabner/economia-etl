@@ -1,0 +1,3 @@
+bronze:
+  path: data/bronze
+  format: json

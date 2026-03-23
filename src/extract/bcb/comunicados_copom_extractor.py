@@ -5,11 +5,12 @@ from datetime import datetime
 import requests
 
 from src.extract.base_extractor import BaseExtractor
+from src.core.extractor_registry import ExtractorRegistry
 
 
 logger = logging.getLogger(__name__)
 
-
+@ExtractorRegistry.register('comunicados')
 class ComunicadosCopomExtractor(BaseExtractor):
     """Extrator de comunicados do COPOM via API pública do Banco Central."""
 
@@ -20,8 +21,8 @@ class ComunicadosCopomExtractor(BaseExtractor):
             config: Dicionário de configuração da extração contendo URLs
                 e parâmetros padrão.
         """
-        self.url_comunicados = config['url_comunicados']
-        self.url_comunicados_detalhes = config['url_comunicados_detalhes']
+        self.url_listar = config['url_listar']
+        self.url_detalhes = config['url_detalhes']
         self.qtd_comunicados = config['qtd_comunicados']
 
     def extract(self) -> tuple[list[dict], dict]:
@@ -35,7 +36,7 @@ class ComunicadosCopomExtractor(BaseExtractor):
         """
         self.__validar_quantidade_comunicados(self.qtd_comunicados)
 
-        comunicados, url = self.__extrair_comunicados(self.url_comunicados, self.qtd_comunicados)
+        comunicados, url = self.__extrair_comunicados(self.url_listar, self.qtd_comunicados)
 
         comunicados_detalhes = []
         if comunicados:
@@ -43,7 +44,7 @@ class ComunicadosCopomExtractor(BaseExtractor):
                 comunicados_detalhes = list(
                     executor.map(
                         lambda comunicado: self.__extrair_comunicados_detalhes(
-                            self.url_comunicados_detalhes,
+                            self.url_detalhes,
                             comunicado['nro_reuniao'],
                         ),
                         comunicados,

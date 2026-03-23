@@ -14,7 +14,7 @@ class BronzeLoader:
     def load(self, data: list[dict], metadata: dict) -> None:
         ingest_date = datetime.now().strftime("%Y-%m-%d")
         source_dir_path = Path(
-            self.storage_config['base_path'],
+            self.storage_config['path'],
             self.source_name,
             self.dataset_name,
             f'ingest_date={ingest_date}'

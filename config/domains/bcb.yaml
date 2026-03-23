@@ -1,0 +1,33 @@
+datasets:
+
+  atas:
+    extract:
+      url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
+      url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"
+      qtd_atas: 8
+    load:
+      bronze:
+        dataset_name: atas
+        partition_by: []
+
+  comunicados:
+    extract:
+      url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
+      url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
+      qtd_comunicados: 8
+    load:
+      bronze:
+        dataset_name: comunicados
+        partition_by: []
+
+  selic:
+    extract:
+      url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
+      #?formato=json&dataInicial=01/01/2025&dataFinal=31/12/2025
+      formato: "json"
+      data_inicial: "01/01/2025"
+      data_final: "31/12/2025"
+    load:
+      bronze:
+        dataset_name: selic
+        partition_by: []

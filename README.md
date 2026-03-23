@@ -26,20 +26,47 @@ pip install -r requirements.txt
 ## Pipelines de ETL
 Para executar as pipelines basta executar o seguinte comando:
 ```bash
-python cli.py <domínio> <dataset> <tier> <opções>
+python cli.py --domain <dominio> --dataset <dataset> --tier <tier> [--debug]
 ```
-O domínio é correspondente a um dos [domínios disponíveis](#domínios-disponíveis) e cada domínio possui um conjunto de datasets presentes na tabela na explicação de cada domínio. O tier é referente à [arquitetura em medalhão](#arquitetura-em-medalhão). As opções são específicas para cada padrão e podem ser consultadas através da opção `--help`.
+Argumentos da CLI:
+
+- `--domain` (obrigatório): domínio para execução do pipeline.
+- `--dataset` (obrigatório): dataset para execução do pipeline.
+- `--tier` (obrigatório): camada da arquitetura medalhão (`bronze`, `silver`, `gold`).
+- `--debug` (opcional): habilita logging detalhado.
+
+Exemplos:
+
+```bash
+python cli.py --domain bcb --dataset atas --tier bronze
+python cli.py --domain bcb --dataset comunicados --tier bronze --debug
+```
+
+Para consultar todas as opções:
+
+```bash
+python cli.py --help
+```
 
 ---
 
 ## Domínios disponíveis
 
-### COPOM — Comitê de Política Monetária
-O domínio **COPOM** agrupa os dados do Comitê de Política Monetária do Banco Central do Brasil, disponibilizados via [API pública do BCB](https://www.bcb.gov.br/conteudo/dadosabertos/BCBDeinf/elements_copom.html#/). Os datasets disponíveis para esse domínio são:
+### BCB — Banco Central do Brasil
+O domínio **BCB** agrupa dados públicos do Banco Central do Brasil, incluindo conteúdos do COPOM via [API pública do BCB](https://www.bcb.gov.br/conteudo/dadosabertos/BCBDeinf/elements_copom.html#/).
+
+Datasets implementados no pipeline:
 
 | Dataset | Descrição |
 |---------|-----------|
 | `atas`  | Atas das reuniões do COPOM com os detalhes de cada reunião |
+| `comunicados` | Comunicados do COPOM com os detalhes de cada reunião |
+
+Dataset configurado (em evolução):
+
+| Dataset | Status |
+|---------|--------|
+| `selic` | Configuração disponível em `config/domains/bcb.yaml`, ainda sem extrator registrado |
 
 ---
 
@@ -56,4 +83,8 @@ Esse padrão facilita rastreabilidade, reprocessamento e evolução das transfor
 
 | Domínio | Dataset | Bronze | Silver | Gold |
 |---------|---------|--------|--------|------|
-| `copom` | `atas`  | ✅     | ❌     | ❌   |
+| `bcb` | `atas`  | ✅     | ❌     | ❌   |
+| `bcb` | `comunicados`  | ✅     | ❌     | ❌   |
+| `bcb` | `selic`  | ❌     | ❌     | ❌   |
+
+## Fonte de dados

@@ -18,3 +18,14 @@ def load_config(filepath: str) -> dict:
     with open(CONFIG_DIR_PATH / filepath, 'r') as file:
         return yaml.safe_load(file)
     
+def load_dataset_config(domain: str, dataset: str) -> dict:
+    """Carrega as configurações de uma fonte de dados específica.
+
+    Args:
+        domain: O domínio da fonte de dados (ex: 'economia', 'financeiro').
+        dataset: O nome do dataset específico dentro do domínio.
+
+    Returns:
+        configurações: Dicionário contendo as configurações da fonte de dados específica.
+    """
+    return load_config(f"domains/{domain}.yaml")['datasets'][dataset]

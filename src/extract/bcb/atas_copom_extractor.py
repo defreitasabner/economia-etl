@@ -5,10 +5,12 @@ from datetime import datetime
 import requests
 
 from src.extract.base_extractor import BaseExtractor
+from src.core.extractor_registry import ExtractorRegistry
 
 
 logger = logging.getLogger(__name__)
 
+@ExtractorRegistry.register('atas')
 class AtasCopomExtractor(BaseExtractor):
     """Extrator de atas do COPOM via API pública do Banco Central."""
  
@@ -19,8 +21,8 @@ class AtasCopomExtractor(BaseExtractor):
             config: Dicionário de configuração da extração contendo base URL,
                 endpoints e parâmetros padrão.
         """
-        self.url_atas = config['url_atas']
-        self.url_atas_detalhes = config['url_atas_detalhes']
+        self.url_listar = config['url_listar']
+        self.url_detalhes = config['url_detalhes']
         self.qtd_atas = config['qtd_atas']
         
     def extract(self) -> tuple[list[dict], dict]:
@@ -33,14 +35,14 @@ class AtasCopomExtractor(BaseExtractor):
                     parâmetros de consulta, quantidade de registros e timestamp.
         """
         self.__validar_quantidade_atas(self.qtd_atas)
-        atas, url = self.__extrair_atas(self.url_atas, self.qtd_atas)
+        atas, url = self.__extrair_atas(self.url_listar, self.qtd_atas)
 
         atas_detalhes = []
         if atas:
             with ThreadPoolExecutor(max_workers = min(4, len(atas))) as executor:
                 atas_detalhes = list(
                     executor.map(
-                        lambda ata: self.__extrair_atas_detalhes(self.url_atas_detalhes, ata['nroReuniao']), 
+                        lambda ata: self.__extrair_atas_detalhes(self.url_detalhes, ata['nroReuniao']), 
                         atas
                     )
                 )
