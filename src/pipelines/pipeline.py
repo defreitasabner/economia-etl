@@ -24,7 +24,7 @@ class Pipeline:
         self.__save_metadata(metadata)
 
     def __save_metadata(self, metadata: dict) -> None:
-        metadata_path = metadata['load']['filepath'].replace('.json', '_metadata.json')
+        metadata_path = metadata['load']['filepath'].replace('data.json', 'metadata.json')
         self.__writer.write_json(metadata, metadata_path)
 
 

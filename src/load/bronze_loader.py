@@ -23,7 +23,7 @@ class BronzeLoader:
             f'ingest_date={ingest_date}'
         )
         source_dir_path.mkdir(parents = True, exist_ok = True)
-        data_filepath = source_dir_path / f'{self.__dataset_name}.json'
+        data_filepath = source_dir_path / f'data.json'
         self.__writer.write_json(data, data_filepath)
         metadata = {
             'filepath': str(data_filepath),
