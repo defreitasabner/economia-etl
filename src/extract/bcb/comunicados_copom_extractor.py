@@ -109,4 +109,4 @@ class ComunicadosCopomExtractor(BaseExtractor):
         }
         response = requests.get(url, params = query_params, timeout = 5)
         logger.debug(f"Requisição GET para {url} com params {query_params} retornou status {response.status_code}")
-        return response.json()['conteudo']
+        return response.json()['conteudo'][0]
