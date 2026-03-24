@@ -4,7 +4,7 @@ datasets:
     extract:
       url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
       url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"
-      qtd_atas: 8
+      qtd_atas: 40 # 5 anos de reuniões (8 reuniões por ano)
     load:
       bronze:
         dataset_name: atas
@@ -14,7 +14,7 @@ datasets:
     extract:
       url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
       url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
-      qtd_comunicados: 8
+      qtd_comunicados: 40 # 5 anos de reuniões (8 reuniões por ano)
     load:
       bronze:
         dataset_name: comunicados
