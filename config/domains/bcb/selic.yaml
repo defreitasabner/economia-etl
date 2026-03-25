@@ -1,0 +1,9 @@
+extract:
+  url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
+  formato: "json"
+  data_inicial: "01/01/2020"
+  data_final: "31/12/2025"
+load:
+  bronze:
+    dataset_name: selic
+    partition_by: []

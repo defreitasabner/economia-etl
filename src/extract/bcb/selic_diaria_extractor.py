@@ -3,14 +3,14 @@ import logging
 import requests
 
 from src.core.extractor_registry import ExtractorRegistry
-from src.extract.base_extractor import BaseExtractor
+from src.extract.extractor import Extractor
 
 
 logger = logging.getLogger(__name__)
 
 
 @ExtractorRegistry.register('selic')
-class SelicDiariaExtractor(BaseExtractor):
+class SelicDiariaExtractor(Extractor):
 
     def __init__(self, config: dict) -> None:
         self.__url = config['url']

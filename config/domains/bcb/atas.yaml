@@ -1,0 +1,25 @@
+extract:
+  url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
+  url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"
+  qtd_atas: 40 # 5 anos de reunioes (8 reunioes por ano)
+transform:
+  - type: json_to_dataframe
+  - type: rename_columns
+    columns:
+      nroReuniao: nro_reuniao
+      dataReferencia: data_referencia
+      dataPublicacao: data_publicacao
+      textoAta: html_ata
+  - type: ata_html
+    coluna_alvo: html_ata
+    id_alvo: ataconteudo
+    coluna_resultado: conteudo_ata
+  - type: select_columns
+    columns:
+      - nro_reuniao
+      - data_referencia
+      - data_publicacao
+      - conteudo_ata
+load:
+  bronze:
+    partition_by: []

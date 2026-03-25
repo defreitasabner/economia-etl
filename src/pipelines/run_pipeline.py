@@ -1,29 +1,37 @@
+from src.infrastructure.file_path_builder import FilePathBuilder
 from src.infrastructure.file_writer import FileWriter
-from src.load.bronze_loader import BronzeLoader
-from src.pipelines.pipeline import Pipeline
+from src.load.loader_factory import LoaderFactory
+from src.pipelines.bronze_pipeline import BronzePipeline
 from src.core.extractor_registry import ExtractorRegistry
-from src.utils.config import load_dataset_config, load_config
+from src.utils.config import load_dataset_config, load_storage_config
 
 
 def run_pipeline(domain_name: str, dataset_name: str, tier: str) -> None:
+    
     dataset_config = load_dataset_config(domain_name, dataset_name)
+    storage_config = load_storage_config(tier)
+    
     extractor = ExtractorRegistry.get(dataset_name)(dataset_config['extract'])
 
-    file_writer = FileWriter()
-    storage_config = load_config('storage.yaml')
-    loader = BronzeLoader(
-        storage_config = storage_config['bronze'],
-        domain_name = domain_name,
-        dataset_name = dataset_name,
-        partition_by = dataset_config['load']['bronze']['partition_by'],
-        writer = file_writer
+    writer = FileWriter()
+    filepath_builder = FilePathBuilder(
+        storage_tier_path = storage_config['path'],
+        domain = domain_name,
+        dataset = dataset_name,
+        partition_by = dataset_config['load'][tier]['partition_by'],
+        storage_format = storage_config['format']
+    )
+    loader = LoaderFactory.create(
+        tier = tier,
+        writer = writer,
+        filepath_builder = filepath_builder
     )
 
-    pipeline = Pipeline(
+    pipeline = BronzePipeline(
         extractor = extractor,
-        transformers = [],
         loader = loader,
-        writer = file_writer
+        writer = writer
 
     )
     pipeline.run()
+

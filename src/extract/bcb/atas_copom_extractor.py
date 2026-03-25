@@ -4,14 +4,14 @@ from datetime import datetime
 
 import requests
 
-from src.extract.base_extractor import BaseExtractor
+from src.extract.extractor import Extractor
 from src.core.extractor_registry import ExtractorRegistry
 
 
 logger = logging.getLogger(__name__)
 
 @ExtractorRegistry.register('atas')
-class AtasCopomExtractor(BaseExtractor):
+class AtasCopomExtractor(Extractor):
     """Extrator de atas do COPOM via API pública do Banco Central."""
  
     def __init__(self, config: dict) -> None:

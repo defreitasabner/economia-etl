@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class BaseLoader(ABC):
+class Loader(ABC):
    
    @abstractmethod
    def load(self, data: list[dict]) -> dict:

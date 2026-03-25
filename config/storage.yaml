@@ -1,3 +1,6 @@
 bronze:
   path: data/bronze
   format: json
+silver:
+  path: data/silver
+  format: parquet

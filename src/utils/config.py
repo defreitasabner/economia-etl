@@ -28,4 +28,15 @@ def load_dataset_config(domain: str, dataset: str) -> dict:
     Returns:
         configurações: Dicionário contendo as configurações da fonte de dados específica.
     """
-    return load_config(f"domains/{domain}.yaml")['datasets'][dataset]
+    return load_config(f"domains/{domain}/{dataset}.yaml")
+
+def load_storage_config(tier: str) -> dict:
+    """Carrega as configurações de armazenamento para um nível específico.
+
+    Args:
+        tier: O nível de armazenamento (ex: 'bronze', 'silver', 'gold').
+
+    Returns:
+        configurações: Dicionário contendo as configurações de armazenamento para o nível específico.
+    """
+    return load_config('storage.yaml')[tier]
