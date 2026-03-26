@@ -39,6 +39,7 @@ Exemplos:
 
 ```bash
 python cli.py --domain bcb --dataset atas --tier bronze
+python cli.py --domain bcb --dataset atas --tier silver
 python cli.py --domain bcb --dataset comunicados --tier bronze --debug
 ```
 
@@ -50,41 +51,29 @@ python cli.py --help
 
 ---
 
-## Domínios disponíveis
+## Pipelines disponíveis
 
-### BCB — Banco Central do Brasil
-O domínio **BCB** agrupa dados públicos do Banco Central do Brasil, incluindo conteúdos do COPOM via [API pública do BCB](https://www.bcb.gov.br/conteudo/dadosabertos/BCBDeinf/elements_copom.html#/).
+### Domínio `bcb`
 
-Datasets implementados no pipeline:
+Datasets disponíveis:
 
 | Dataset | Descrição |
 |---------|-----------|
-| `atas`  | Atas das reuniões do COPOM com os detalhes de cada reunião |
-| `comunicados` | Comunicados do COPOM com os detalhes de cada reunião |
+| `atas` | Atas das reuniões do COPOM |
+| `comunicados` | Comunicados do COPOM |
+| `selic` | Série diária da taxa Selic |
 
-Dataset configurado (em evolução):
-
-| Dataset | Status |
-|---------|--------|
-| `selic` | Configuração disponível em `config/domains/bcb.yaml`, ainda sem extrator registrado |
-
----
-
-## Arquitetura em medalhão
-A arquitetura em medalhão organiza o processamento de dados em camadas incrementais de qualidade e refinamento:
-
-- **Bronze:** ingestão bruta dos dados da fonte, com o mínimo de tratamento.
-- **Silver:** dados limpos, padronizados e preparados para consumo analítico.
-- **Gold:** dados agregados e modelados para casos de negócio e indicadores finais.
-
-Esse padrão facilita rastreabilidade, reprocessamento e evolução das transformações ao longo do tempo.
-
-### Cobertura de pipelines por dataset e tier
+Cobertura por tier:
 
 | Domínio | Dataset | Bronze | Silver | Gold |
 |---------|---------|--------|--------|------|
-| `bcb` | `atas`  | ✅     | ❌     | ❌   |
-| `bcb` | `comunicados`  | ✅     | ❌     | ❌   |
-| `bcb` | `selic`  | ❌     | ❌     | ❌   |
+| `bcb` | `atas`  | ✅     | ✅     | ❌   |
+| `bcb` | `comunicados`  | ✅     | ✅     | ❌   |
+| `bcb` | `selic`  | ✅     | ✅     | ❌   |
 
-## Fonte de dados
+Exemplos adicionais:
+
+```bash
+python cli.py --domain bcb --dataset comunicados --tier silver
+python cli.py --domain bcb --dataset selic --tier bronze
+```
