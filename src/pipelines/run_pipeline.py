@@ -1,12 +1,15 @@
 from src.load.loader_factory import LoaderFactory
-from src.core.extractor_registry import ExtractorRegistry
+from src.extract.extractor_registry import ExtractorRegistry
 from src.pipelines.pipeline_factory import PipelineFactory
 from src.read.reader_factory import ReaderFactory
+from src.transform.transformer_factory import TransformerFactory
+from src.transform.transformer_registry import TransformerRegistry
 from src.utils.config import load_dataset_config, load_storage_config
 
 
 def run_pipeline(domain_name: str, dataset_name: str, tier: str) -> None:
     ExtractorRegistry.auto_discover()
+    TransformerRegistry.auto_discover()
     
     dataset_config = load_dataset_config(domain_name, dataset_name)
     storage_config = load_storage_config(tier)
@@ -36,12 +39,17 @@ def run_pipeline(domain_name: str, dataset_name: str, tier: str) -> None:
             format = storage_config['input_format']
         )
 
+    transformers = []
+    for transformer_config in dataset_config['transform']:
+        transformer = TransformerFactory.create(transformer_config = transformer_config)
+        transformers.append(transformer)
+
     pipeline = PipelineFactory.create(
         tier = tier,
         extractor = extractor,
         loader = loader,
         reader = reader,
-        transformers = []  # TODO: implementar mecanismo de registro e carregamento de transformadores
+        transformers = transformers
     )
     
     pipeline.run()

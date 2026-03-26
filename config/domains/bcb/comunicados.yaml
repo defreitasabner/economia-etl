@@ -2,6 +2,21 @@ extract:
   url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
   url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
   qtd_comunicados: 40 # 5 anos de reunioes (8 reunioes por ano)
+transform:
+  - type: json_to_dataframe
+  - type: rename_columns
+    columns_mapping:
+      dataReferencia: data_referencia
+      textoComunicado: html_comunicado
+  - type: html_to_text
+    target_column: html_comunicado
+    result_column: conteudo
+  - type: select_columns
+    columns:
+      - nro_reuniao
+      - data_referencia
+      - titulo
+      - conteudo
 load:
   bronze:
     partition_by: []

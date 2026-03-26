@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from src.core.extractor_registry import ExtractorRegistry
+from src.extract.extractor_registry import ExtractorRegistry
 from src.extract.extractor import Extractor
 
 

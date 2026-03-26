@@ -3,6 +3,20 @@ extract:
   formato: "json"
   data_inicial: "01/01/2020"
   data_final: "31/12/2025"
+transform:
+  - type: json_to_dataframe
+  - type: text_to_date
+    target_column: data
+    text_format: "%d/%m/%Y"
+  - type: percent_to_decimal
+    target_column: valor
+    result_column: selic_diaria
+  - type: select_columns
+    columns:
+      - data
+      - selic_diaria
 load:
   bronze:
+    partition_by: []
+  silver:
     partition_by: []

@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 
 from src.extract.extractor import Extractor
-from src.core.extractor_registry import ExtractorRegistry
+from src.extract.extractor_registry import ExtractorRegistry
 
 
 logger = logging.getLogger(__name__)
