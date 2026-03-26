@@ -4,5 +4,4 @@ extract:
   qtd_comunicados: 40 # 5 anos de reunioes (8 reunioes por ano)
 load:
   bronze:
-    dataset_name: comunicados
     partition_by: []

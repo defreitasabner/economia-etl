@@ -5,7 +5,7 @@ from src.infrastructure.file_path_builder import FilePathBuilder
 
 def test_build_path_returns_expected_filepath(tmp_path: Path) -> None:
     builder = FilePathBuilder(
-        storage_tier_path=str(tmp_path),
+        base_path=str(tmp_path),
         domain="bcb",
         dataset="selic",
         storage_format="json",
@@ -19,7 +19,7 @@ def test_build_path_returns_expected_filepath(tmp_path: Path) -> None:
 
 def test_build_path_creates_directory_structure(tmp_path: Path) -> None:
     builder = FilePathBuilder(
-        storage_tier_path=str(tmp_path),
+        base_path=str(tmp_path),
         domain="bcb",
         dataset="atas",
     )
@@ -32,7 +32,7 @@ def test_build_path_creates_directory_structure(tmp_path: Path) -> None:
 
 def test_build_path_uses_default_json_format(tmp_path: Path) -> None:
     builder = FilePathBuilder(
-        storage_tier_path=str(tmp_path),
+        base_path=str(tmp_path),
         domain="bcb",
         dataset="comunicados",
     )
@@ -44,7 +44,7 @@ def test_build_path_uses_default_json_format(tmp_path: Path) -> None:
 
 def test_build_path_accepts_custom_storage_format(tmp_path: Path) -> None:
     builder = FilePathBuilder(
-        storage_tier_path=str(tmp_path),
+        base_path=str(tmp_path),
         domain="bcb",
         dataset="comunicados",
         storage_format="parquet",
@@ -58,7 +58,7 @@ def test_build_path_accepts_custom_storage_format(tmp_path: Path) -> None:
 
 def test_build_path_accepts_partition_by_without_changing_path(tmp_path: Path) -> None:
     builder = FilePathBuilder(
-        storage_tier_path=str(tmp_path),
+        base_path=str(tmp_path),
         domain="bcb",
         dataset="comunicados",
         partition_by=["ano", "mes"],

@@ -23,3 +23,5 @@ transform:
 load:
   bronze:
     partition_by: []
+  silver:
+    partition_by: []

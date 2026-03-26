@@ -5,5 +5,4 @@ extract:
   data_final: "31/12/2025"
 load:
   bronze:
-    dataset_name: selic
     partition_by: []
