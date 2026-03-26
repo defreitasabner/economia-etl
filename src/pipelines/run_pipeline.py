@@ -6,6 +6,7 @@ from src.utils.config import load_dataset_config, load_storage_config
 
 
 def run_pipeline(domain_name: str, dataset_name: str, tier: str) -> None:
+    ExtractorRegistry.auto_discover()
     
     dataset_config = load_dataset_config(domain_name, dataset_name)
     storage_config = load_storage_config(tier)
