@@ -1,4 +1,12 @@
+# Python
 .venv/
 __pycache__/
-data/
+.pytest_cache/
+
+# Tests and Profiling
 *.prof
+.coverage
+htmlcov/
+
+# Custom
+data/

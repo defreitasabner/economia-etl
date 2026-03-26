@@ -1,0 +1,8 @@
+bronze:
+  output_path: &bronze_output_path data/bronze
+  output_format: &bronze_output_format json
+silver:
+  input_path: *bronze_output_path
+  input_format: *bronze_output_format
+  output_path: data/silver
+  output_format: parquet
