@@ -2,6 +2,7 @@ import logging
 
 import requests
 
+from src.config.models.dataset_config import ExtractConfig
 from src.extract.extractor_registry import ExtractorRegistry
 from src.extract.extractor import Extractor
 
@@ -12,20 +13,18 @@ logger = logging.getLogger(__name__)
 @ExtractorRegistry.register('selic')
 class SelicDiariaExtractor(Extractor):
 
-    def __init__(self, config: dict) -> None:
-        self.__url = config['url']
-        self.__formato = config['formato']
-        self.__data_inicial = config['data_inicial']
-        self.__data_final = config['data_final']
+    def __init__(self, config: ExtractConfig) -> None:
+        self.__url = f"{config.base_url}/{config.endpoints['data']}"
+        self.__params = config.params
 
     def extract(self) -> tuple[list[dict], dict]:
         logger.info(f"Extraindo dados da SELIC diária: {self.__url}")
         query_params = {
-            'formato': self.__formato,
-            'dataInicial': self.__data_inicial,
-            'dataFinal': self.__data_final
+            'formato': self.__params['formato'],
+            'dataInicial': self.__params['data_inicial'],
+            'dataFinal': self.__params['data_final']
         }
-        response = requests.get(self.__url, params = query_params)
+        response = requests.get(self.__url, params = query_params, timeout = 5)
         response.raise_for_status()
         data = response.json()
         metadata = {

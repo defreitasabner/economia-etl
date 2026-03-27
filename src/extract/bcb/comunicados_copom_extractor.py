@@ -4,39 +4,29 @@ from datetime import datetime
 
 import requests
 
+from src.config.models.dataset_config import ExtractConfig
 from src.extract.extractor import Extractor
 from src.extract.extractor_registry import ExtractorRegistry
 
 
 logger = logging.getLogger(__name__)
 
+
 @ExtractorRegistry.register('comunicados')
 class ComunicadosCopomExtractor(Extractor):
-    """Extrator de comunicados do COPOM via API pública do Banco Central."""
+    """Extrator de comunicados do COPOM via API publica do Banco Central."""
 
-    def __init__(self, config: dict) -> None:
-        """Inicializa o extrator com a configuração da fonte COPOM.
-
-        Args:
-            config: Dicionário de configuração da extração contendo URLs
-                e parâmetros padrão.
-        """
-        self.url_listar = config['url_listar']
-        self.url_detalhes = config['url_detalhes']
-        self.qtd_comunicados = config['qtd_comunicados']
+    def __init__(self, config: ExtractConfig) -> None:
+        """Inicializa o extrator com a configuracao da fonte COPOM."""
+        self.__url_list = f"{config.base_url}/{config.endpoints['list']}"
+        self.__url_details = f"{config.base_url}/{config.endpoints['detail']}"
+        self.__params = config.params
 
     def extract(self) -> tuple[list[dict], dict]:
-        """Extrai comunicados recentes do COPOM e seus detalhes.
+        """Extrai comunicados recentes do COPOM e seus detalhes."""
+        self.__validate_params(self.__params)
 
-        Returns:
-            (dados, metadados):
-                - Lista de dicionários com os detalhes dos comunicados.
-                - Dicionário de metadados da extração, incluindo URL,
-                    parâmetros de consulta, quantidade de registros e timestamp.
-        """
-        self.__validar_quantidade_comunicados(self.qtd_comunicados)
-
-        comunicados, url = self.__extrair_comunicados(self.url_listar, self.qtd_comunicados)
+        comunicados, url = self.__extrair_comunicados(self.__url_list)
 
         comunicados_detalhes = []
         if comunicados:
@@ -44,7 +34,7 @@ class ComunicadosCopomExtractor(Extractor):
                 comunicados_detalhes = list(
                     executor.map(
                         lambda comunicado: self.__extrair_comunicados_detalhes(
-                            self.url_detalhes,
+                            self.__url_details,
                             comunicado['nro_reuniao'],
                         ),
                         comunicados,
@@ -53,60 +43,40 @@ class ComunicadosCopomExtractor(Extractor):
 
         metadata = {
             'url': url,
-            'query_params': {
-                'quantidade': self.qtd_comunicados
-            },
+            'query_params': self.__params,
             'record_count': len(comunicados_detalhes),
-            'extracted_at': datetime.now().isoformat()
+            'extracted_at': datetime.now().isoformat(),
         }
-        logger.info(f"Extraídos {len(comunicados_detalhes)} comunicados do COPOM")
+        logger.info(f"Extraidos {len(comunicados_detalhes)} comunicados do COPOM")
         return comunicados_detalhes, metadata
 
-    def __validar_quantidade_comunicados(self, qtd_comunicados: int) -> None:
-        """Valida a quantidade de comunicados a ser extraída.
-
-        Args:
-            qtd_comunicados: Quantidade de comunicados a ser extraída.
-
-        Raises:
-            ValueError: Se a quantidade de comunicados for menor ou igual a zero.
-        """
-        if qtd_comunicados <= 0:
+    def __validate_params(self, params: dict) -> None:
+        """Valida a quantidade de comunicados a ser extraida."""
+        quantidade = params.get('quantidade', 0)
+        if quantidade <= 0:
             raise ValueError("A quantidade de comunicados deve ser maior que zero.")
 
-
-    def __extrair_comunicados(self, url: str, qtd_comunicados: int) -> tuple[list[dict], str]:
-        """Consulta a API para obter a lista de comunicados mais recentes.
-
-        Args:
-            url: URL da API para consulta dos comunicados.
-            qtd_comunicados: Quantidade de comunicados a serem extraídos.
-
-        Returns:
-            (comunicados, url):
-                - Lista de comunicados retornados pela API.
-                - URL final da requisição (com query string).
-        """
-        query_params = {
-            'quantidade': qtd_comunicados
-        }
-        response = requests.get(url, params = query_params, timeout = 5)
-        logger.debug(f"Requisição GET para {url} com params {query_params} retornou status {response.status_code}")
+    def __extrair_comunicados(self, url: str) -> tuple[list[dict], str]:
+        """Consulta a API para obter a lista de comunicados mais recentes."""
+        response = requests.get(url, params=self.__params, timeout=5)
+        logger.debug(
+            "Requisicao GET para %s com params %s retornou status %s",
+            url,
+            self.__params,
+            response.status_code,
+        )
         return response.json()['conteudo'], response.url
 
     def __extrair_comunicados_detalhes(self, url: str, nro_reuniao: str) -> dict:
-        """Consulta a API para obter os detalhes de um comunicado do COPOM.
-
-        Args:
-            url: URL da API para consulta dos detalhes do comunicado.
-            nro_reuniao: Número da reunião do comunicado.
-
-        Returns:
-            comunicados_detalhes: Dicionário com os detalhes do comunicado solicitado.
-        """
+        """Consulta a API para obter os detalhes de um comunicado do COPOM."""
         query_params = {
-            'nro_reuniao': nro_reuniao
+            'nro_reuniao': nro_reuniao,
         }
-        response = requests.get(url, params = query_params, timeout = 5)
-        logger.debug(f"Requisição GET para {url} com params {query_params} retornou status {response.status_code}")
+        response = requests.get(url, params=query_params, timeout=5)
+        logger.debug(
+            "Requisicao GET para %s com params %s retornou status %s",
+            url,
+            query_params,
+            response.status_code,
+        )
         return response.json()['conteudo'][0]

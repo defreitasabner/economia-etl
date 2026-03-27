@@ -21,6 +21,7 @@ class SilverPipeline(Pipeline):
         for transformer in self.__transformers:
             data = transformer.transform(data)
         load_metadata = self.__loader.load(data)
+        #TODO: Melhorar metadados: transformações aplicadas e talvez puxar metadados da bronze layer também
         metadata = {
             'input_path': self.__bronze_reader.get_path(),
             'load': load_metadata
