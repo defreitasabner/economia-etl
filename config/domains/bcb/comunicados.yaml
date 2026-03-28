@@ -1,24 +1,35 @@
 extract:
-  url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
-  url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
-  qtd_comunicados: 40 # 5 anos de reunioes (8 reunioes por ano)
+  extractors:
+    - type: comunicados_list
+      params:
+        request:
+          url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
+          query_params:
+            quantidade: 40 # 5 anos de reunioes (8 reunioes por ano)
+    - type: comunicados_detail
+      params:
+        request:
+          url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
+          query_params: {}
 transform:
-  - type: json_to_dataframe
-  - type: rename_columns
-    columns_mapping:
-      dataReferencia: data_referencia
-      textoComunicado: html_comunicado
-  - type: html_to_text
-    target_column: html_comunicado
-    result_column: conteudo
-  - type: select_columns
-    columns:
-      - nro_reuniao
-      - data_referencia
-      - titulo
-      - conteudo
+  transformers:
+    - type: json_to_dataframe
+      params: {}
+    - type: rename_columns
+      params:
+        columns_mapping:
+          dataReferencia: data_referencia
+          textoComunicado: html_comunicado
+    - type: html_to_text
+      params:
+        target_column: html_comunicado
+        result_column: conteudo
+    - type: select_columns
+      params:
+        columns:
+          - nro_reuniao
+          - data_referencia
+          - titulo
+          - conteudo
 load:
-  bronze:
-    partition_by: []
-  silver:
-    partition_by: []
+  partition_by: []

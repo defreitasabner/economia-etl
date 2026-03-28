@@ -3,7 +3,7 @@ extract:
     - type: sgs
       params:
         request:
-          url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4189/dados"
+          url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados"
           query_params:
             formato: "json"
             dataInicial: "01/01/2020"
@@ -19,11 +19,11 @@ transform:
     - type: percent_to_decimal
       params:
         target_column: valor
-        result_column: selic
+        result_column: ipca
     - type: select_columns
       params:
         columns:
           - data
-          - selic
+          - ipca
 load:
   partition_by: []

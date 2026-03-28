@@ -1,27 +1,38 @@
 extract:
-  url_listar: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
-  url_detalhes: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"
-  qtd_atas: 40 # 5 anos de reunioes (8 reunioes por ano)
+  extractors:
+    - type: atas_list
+      params:
+        request:
+          url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
+          query_params:
+            quantidade: 40 # 5 anos de reunioes (8 reunioes por ano)
+    - type: atas_detail
+      params:
+        request:
+          url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"
+          query_params: {}
 transform:
-  - type: json_to_dataframe
-  - type: rename_columns
-    columns_mapping:
-      nroReuniao: nro_reuniao
-      dataReferencia: data_referencia
-      dataPublicacao: data_publicacao
-      textoAta: html_ata
-  - type: html_to_text
-    target_column: html_ata
-    target_html_id: ataconteudo
-    result_column: conteudo
-  - type: select_columns
-    columns:
-      - nro_reuniao
-      - data_referencia
-      - data_publicacao
-      - conteudo
+  transformers:
+    - type: json_to_dataframe
+      params: {}
+    - type: rename_columns
+      params:
+        columns_mapping:
+          nroReuniao: nro_reuniao
+          dataReferencia: data_referencia
+          dataPublicacao: data_publicacao
+          textoAta: html_ata
+    - type: html_to_text
+      params:
+        target_column: html_ata
+        target_html_id: ataconteudo
+        result_column: conteudo
+    - type: select_columns
+      params:
+        columns:
+          - nro_reuniao
+          - data_referencia
+          - data_publicacao
+          - conteudo
 load:
-  bronze:
-    partition_by: []
-  silver:
-    partition_by: []
+  partition_by: []

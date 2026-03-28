@@ -21,8 +21,6 @@ Instale as dependências no ambiente virtual:
 pip install -r requirements.txt
 ```
 
----
-
 ## Pipelines de ETL
 Para executar as pipelines basta executar o seguinte comando:
 ```bash
@@ -49,8 +47,6 @@ Para consultar todas as opções:
 python cli.py --help
 ```
 
----
-
 ## Pipelines disponíveis
 
 ### Domínio `bcb`
@@ -61,7 +57,10 @@ Datasets disponíveis:
 |---------|-----------|
 | `atas` | Atas das reuniões do COPOM |
 | `comunicados` | Comunicados do COPOM |
-| `selic` | Série diária da taxa Selic |
+| `selic` | Série mensal da taxa Selic |
+| `pib` | Série mensal do PIB |
+| `cambio` | Série de câmbio |
+| `ipca` | Série do IPCA |
 
 Cobertura por tier:
 
@@ -70,10 +69,34 @@ Cobertura por tier:
 | `bcb` | `atas`  | ✅     | ✅     | ❌   |
 | `bcb` | `comunicados`  | ✅     | ✅     | ❌   |
 | `bcb` | `selic`  | ✅     | ✅     | ❌   |
+| `bcb` | `pib`  | ✅     | ✅     | ❌   |
+| `bcb` | `cambio`  | ✅     | ✅     | ❌   |
+| `bcb` | `ipca`  | ✅     | ✅     | ❌   |
 
 Exemplos adicionais:
 
 ```bash
 python cli.py --domain bcb --dataset comunicados --tier silver
 python cli.py --domain bcb --dataset selic --tier bronze
+python cli.py --domain bcb --dataset pib --tier bronze
+python cli.py --domain bcb --dataset ipca --tier silver
 ```
+
+## Execução em lote por tier
+
+Existem scripts shell para executar todos os datasets de todos os domínios de uma vez para um tier específico:
+
+- `scripts/run_all_bronze.sh`
+- `scripts/run_all_silver.sh`
+
+Como os scripts fazem `cd ..` internamente, execute-os a partir do diretório `scripts`:
+
+```bash
+cd scripts
+./run_all_bronze.sh
+./run_all_silver.sh
+```
+
+## Fontes
+- [API Copom do BCB](https://www.bcb.gov.br/conteudo/dadosabertos/BCBDeinf/elements_copom.html#/)
+- [Sistema Gerenciador de Séries Temporais do BCB - SGS](https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries)
