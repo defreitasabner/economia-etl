@@ -1,12 +1,12 @@
 extract:
   extractors:
-    - type: comunicados_list
+    - type: copom_list
       params:
         request:
           url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
           query_params:
             quantidade: 40 # 5 anos de reunioes (8 reunioes por ano)
-    - type: comunicados_detail
+    - type: copom_detail
       params:
         request:
           url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados_detalhes"
