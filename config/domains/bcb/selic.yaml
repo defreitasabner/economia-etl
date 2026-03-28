@@ -1,11 +1,13 @@
 extract:
-  base_url: "https://api.bcb.gov.br"
-  endpoints:
-    data: "dados/serie/bcdata.sgs.11/dados"
-  params:
-    formato: "json"
-    data_inicial: "01/01/2020"
-    data_final: "31/12/2025"
+  extractors:
+    - type: sgs
+      params:
+        request:
+          url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
+          query_params:
+            formato: "json"
+            dataInicial: "01/01/2020"
+            dataFinal: "31/12/2025"
 transform:
   transformers:
     - type: json_to_dataframe

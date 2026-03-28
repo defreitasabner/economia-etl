@@ -3,10 +3,19 @@ from typing import Any
 from pydantic import BaseModel
 
 
+class RequestConfig(BaseModel):
+    url: str
+    query_params: dict[str, Any]
+
+class ExtractorParams(BaseModel):
+    request: RequestConfig
+
+class ExtractorConfig(BaseModel):
+    type: str
+    params: ExtractorParams
+
 class ExtractConfig(BaseModel):
-    base_url: str
-    endpoints: dict[str, str]
-    params: dict[str, Any]
+    extractors: list[ExtractorConfig]
 
 class TransformerConfig(BaseModel):
     type: str

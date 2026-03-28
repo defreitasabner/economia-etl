@@ -1,4 +1,5 @@
 from src.config.config import Config
+from src.extract.extractor_factory import ExtractorFactory
 from src.load.loader_factory import LoaderFactory
 from src.extract.extractor_registry import ExtractorRegistry
 from src.pipelines.pipeline_factory import PipelineFactory
@@ -17,7 +18,7 @@ def run_pipeline(domain_name: str, dataset_name: str, tier: str) -> None:
     
     extractor = None
     if tier == 'bronze':
-        extractor = ExtractorRegistry.get(name = dataset_name)(dataset_config.extract)
+        extractor = ExtractorFactory.create(dataset_config.extract)
 
     loader = LoaderFactory.create(
         tier = tier,
