@@ -1,9 +1,13 @@
+import logging
+
 import pandas as pd
 from bs4 import BeautifulSoup
 
 from src.transform.transformer_registry import TransformerRegistry
 from src.transform.transformer import Transformer
 
+
+logger = logging.getLogger(__name__)
 
 @TransformerRegistry.register('html_to_text')
 class HtmlToTextTransformer(Transformer):
@@ -16,11 +20,21 @@ class HtmlToTextTransformer(Transformer):
     def transform(self, data: pd.DataFrame) -> pd.DataFrame:
         if self.__target_html_id:
             data[self.__result_column] = data[self.__target_column].map(
-                lambda x: BeautifulSoup(x, 'html.parser').find(id = self.__target_html_id).text
+                lambda x: 
+                    BeautifulSoup(x, 'html.parser').find(id = self.__target_html_id).text
+                        if pd.notna(x) 
+                            and x is not None 
+                                and BeautifulSoup(x, 'html.parser').find(id = self.__target_html_id) is not None 
+                        else x
             )
         else:
             data[self.__result_column] = data[self.__target_column].map(
-                lambda x: BeautifulSoup(x, 'html.parser').text
+                lambda x: 
+                    BeautifulSoup(x, 'html.parser').text 
+                        if pd.notna(x) 
+                            and x is not None 
+                                and BeautifulSoup(x, 'html.parser').find(id = self.__target_html_id) is not None 
+                        else x
             )
         return data
     

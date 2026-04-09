@@ -5,7 +5,7 @@ extract:
         request:
           url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/comunicados"
           query_params:
-            quantidade: 40 # 5 anos de reunioes (8 reunioes por ano)
+            quantidade: 80 # 10 anos de reunioes (8 reunioes por ano)
     - type: copom_detail
       params:
         request:
