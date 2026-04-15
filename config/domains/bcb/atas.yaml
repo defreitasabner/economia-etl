@@ -5,7 +5,7 @@ extract:
         request:
           url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
           query_params:
-            quantidade: 80 # 10 anos de reunioes (8 reunioes por ano)
+            quantidade: 300
     - type: copom_detail
       params:
         request:
