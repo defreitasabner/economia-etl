@@ -1,12 +1,12 @@
 extract:
   extractors:
-    - type: atas_list
+    - type: copom_list
       params:
         request:
           url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas"
           query_params:
-            quantidade: 40 # 5 anos de reunioes (8 reunioes por ano)
-    - type: atas_detail
+            quantidade: 300
+    - type: copom_detail
       params:
         request:
           url: "https://www.bcb.gov.br/api/servico/sitebcb/copom/atas_detalhes"

@@ -6,7 +6,7 @@ extract:
           url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4189/dados"
           query_params:
             formato: "json"
-            dataInicial: "01/01/2020"
+            dataInicial: "01/01/1998"
             dataFinal: "31/12/2025"
 transform:
   transformers:
