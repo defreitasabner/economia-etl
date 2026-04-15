@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from src.config.models.dataset_config import ExtractorConfig
 from src.extract.extractor import Extractor
@@ -13,6 +14,10 @@ class SgsExtractor(Extractor):
         self.__query_params = config.params.request.query_params
 
     def extract(self) -> tuple[list[dict], dict]:
+        data_inicial = datetime.strptime(self.__query_params['dataInicial'], '%d/%m/%Y').date()
+        data_final = datetime.strptime(self.__query_params['dataFinal'], '%d/%m/%Y').date()
+        if data_inicial > data_final:
+            raise ValueError("dataInicial deve ser anterior a dataFinal")
         response = requests.get(self.__url, params=self.__query_params, timeout=10)
         response.raise_for_status()
         data = response.json()
