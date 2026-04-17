@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
@@ -8,6 +8,7 @@ class RequestConfig(BaseModel):
     query_params: dict[str, Any]
 
 class ExtractorParams(BaseModel):
+    periodicidade_diaria: Optional[bool] = False
     request: RequestConfig
 
 class ExtractorConfig(BaseModel):

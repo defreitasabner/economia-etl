@@ -1,7 +1,10 @@
+# PIB mensal - Valores correntes (R$ milhões)
+# Unidade: R$ (milhões)
 extract:
   extractors:
     - type: sgs
       params:
+        periodicidade_diaria: false
         request:
           url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4380/dados"
           query_params:

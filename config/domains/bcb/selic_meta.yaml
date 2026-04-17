@@ -1,15 +1,15 @@
-# Taxa de juros - Selic acumulada no mês anualizada base 252
+# Taxa de juros - Meta Selic definida pelo Copom
 # Unidade: % a.a.
 extract:
   extractors:
     - type: sgs
       params:
-        periodicidade_diaria: false
+        periodicidade_diaria: true
         request:
-          url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4189/dados"
+          url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados"
           query_params:
             formato: "json"
-            dataInicial: "01/01/1998"
+            dataInicial: "01/01/1998" #  Data Inicial segundo metadados do SGS: 05/03/1999
             dataFinal: "31/12/2025"
 transform:
   transformers:
@@ -22,11 +22,11 @@ transform:
     - type: percent_to_decimal
       params:
         target_column: valor
-        result_column: selic
+        result_column: selic_meta
     - type: select_columns
       params:
         columns:
           - data
-          - selic
+          - selic_meta
 load:
   partition_by: []

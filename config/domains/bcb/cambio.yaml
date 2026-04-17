@@ -1,7 +1,10 @@
+# Taxa de câmbio - Livre - Dólar americano (compra) - Média de período - mensal
+# Unidade: u.m.c./US$
 extract:
   extractors:
     - type: sgs
       params:
+        periodicidade_diaria: false
         request:
           url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.3697/dados"
           query_params:
